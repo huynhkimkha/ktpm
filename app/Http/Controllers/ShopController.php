@@ -15,9 +15,9 @@ class ShopController extends Controller
      */
     public function index()
     {
-        $pagination = 9;
-        $categories = Category::all();
 
+        $categories = Category::all();
+        
         if (request()->category) {
             $products = Product::with('categories')->whereHas('categories', function ($query) {
                 $query->where('slug', request()->category);
@@ -27,13 +27,12 @@ class ShopController extends Controller
             $products = Product::where('featured', true);
             $categoryName = 'Featured';
         }
-
         if (request()->sort == 'low_high') {
-            $products = $products->orderBy('price')->paginate($pagination);
+            $products = $products->orderBy('price')->paginate(10);
         } elseif (request()->sort == 'high_low') {
-            $products = $products->orderBy('price', 'desc')->paginate($pagination);
+            $products = $products->orderBy('price', 'desc')->paginate(10);
         } else {
-            $products = $products->paginate($pagination);
+            $products = $products->paginate(10);
         }
 
         return view('shop')->with([
@@ -53,9 +52,7 @@ class ShopController extends Controller
     {
         $product = Product::where('slug', $slug)->firstOrFail();
         $mightAlsoLike = Product::where('slug', '!=', $slug)->mightAlsoLike()->get();
-
         $stockLevel = getStockLevel($product->quantity);
-
         return view('product')->with([
             'product' => $product,
             'stockLevel' => $stockLevel,
@@ -71,12 +68,10 @@ class ShopController extends Controller
 
         $query = $request->input('query');
 
-        // $products = Product::where('name', 'like', "%$query%")
-        //                    ->orWhere('details', 'like', "%$query%")
-        //                    ->orWhere('description', 'like', "%$query%")
-        //                    ->paginate(10);
-
-        $products = Product::search($query)->paginate(10);
+        $products = Product::where('name', 'like', "%$query%")
+                           ->orWhere('details', 'like', "%$query%")
+                          ->orWhere('description', 'like', "%$query%")
+                          ->paginate(10);
 
         return view('search-results')->with('products', $products);
     }

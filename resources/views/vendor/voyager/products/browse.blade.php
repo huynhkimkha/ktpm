@@ -34,6 +34,9 @@
                                                 <option value="{{ $key }}" @if($search->key == $key){{ 'selected' }}@endif>{{ ucwords(str_replace('_', ' ', $key)) }}</option>
                                         @endforeach
                                     </select>
+                                    <script>
+                                        alert('Duc Anh');
+                                    </script>
                                     <select id="filter" name="filter">
                                         <option value="contains" @if($search->filter == "contains"){{ 'selected' }}@endif>contains</option>
                                         <option value="equals" @if($search->filter == "equals"){{ 'selected' }}@endif>=</option>

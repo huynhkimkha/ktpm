@@ -4,6 +4,9 @@ pipeline {
         stage('Build') {
             
             steps {
+            bat 'cp .env.example .env'
+            bat 'vi .env'
+            
             bat 'composer install'
             }
         }

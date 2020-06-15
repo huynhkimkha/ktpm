@@ -47,6 +47,7 @@
                 @if ($product->images)
                     @foreach (json_decode($product->images, true) as $image)
                     <div class="product-section-thumbnail">
+                    
                         <img src="{{ productImage($image) }}" alt="product">
                     </div>
                     @endforeach

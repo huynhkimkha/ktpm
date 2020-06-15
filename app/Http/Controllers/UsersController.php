@@ -71,8 +71,8 @@ class UsersController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,'.auth()->id(),
             'password' => 'sometimes|nullable|string|min:6|confirmed',
         ]);
-
         $user = auth()->user();
+        dd($user);
         $input = $request->except('password', 'password_confirmation');
 
         if (! $request->filled('password')) {

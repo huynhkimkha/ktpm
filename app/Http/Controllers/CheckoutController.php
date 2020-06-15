@@ -25,18 +25,16 @@ class CheckoutController extends Controller
         if (Cart::instance('default')->count() == 0) {
             return redirect()->route('shop.index');
         }
-
         if (auth()->user() && request()->is('guestCheckout')) {
             return redirect()->route('checkout.index');
         }
-
         $gateway = new \Braintree\Gateway([
             'environment' => config('services.braintree.environment'),
             'merchantId' => config('services.braintree.merchantId'),
             'publicKey' => config('services.braintree.publicKey'),
             'privateKey' => config('services.braintree.privateKey')
         ]);
-
+        
         try {
             $paypalToken = $gateway->ClientToken()->generate();
         } catch (\Exception $e) {
@@ -71,7 +69,6 @@ class CheckoutController extends Controller
         $contents = Cart::content()->map(function ($item) {
             return $item->model->slug.', '.$item->qty;
         })->values()->toJson();
-
         try {
             $charge = Stripe::charges()->create([
                 'amount' => getNumbers()->get('newTotal') / 100,
